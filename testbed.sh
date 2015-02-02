@@ -19,6 +19,7 @@ do
 done <<EOF
   $( get_nodes opencontrail::control )
 EOF
+echo "CONTROLLER_NAMES = $CONTROLLER_NAMES"
 
 while read HOSTNAME
 do
@@ -27,6 +28,7 @@ do
 done <<EOF
   $( get_nodes opencontrail::analytics )
 EOF
+echo "COLLECTOR_NAMES = $COLLECTOR_NAMES"
 
 while read HOSTNAME
 do
@@ -35,6 +37,7 @@ do
 done <<EOF
   $( get_nodes opencontrail::config )
 EOF
+echo "CONFIG_NAMES = $CONFIG_NAMES"
 
 while read HOSTNAME
 do
@@ -43,6 +46,7 @@ do
 done <<EOF
   $( get_nodes opencontrail::webui )
 EOF
+echo "WEBUI_NAMES = $WEBUI_NAMES"
 
 while read HOSTNAME
 do
@@ -51,6 +55,7 @@ do
 done <<EOF
   $( get_nodes opencontrail::compute )
 EOF
+echo "COMPUTE_NAMES = $COMPUTE_NAMES"
 
 #
 # CONFIG FILE GENERATION
@@ -81,6 +86,39 @@ do
       "roles": [
         {
           "type": "collector"
+        }
+      ]
+    }
+EOF
+  I=$(( $I + 1 ))
+  SEP=","
+done <<EOF
+  $( get_nodes opencontrail::config )
+EOF
+
+#   WEBUIS
+I=1
+for HOSTNAME in $WEBUI_NAMES
+do
+  WEBUI_IP=$( echo -n $WEBUI_IPS | cut -d ' ' -f $I )
+  CTL_IP=$( echo -n $CONTROLLER_IPS | cut -d ' ' -f $I )
+  DATA_IP=$( echo -n $COLLECTOR_IPS | cut -d ' ' -f $I )
+  CONFIG_NAME=$( echo -n $CONFIG_NAMES | cut -d ' ' -f $I )
+  cat <<EOF >>sanity_testbed.json
+    $SEP
+    {
+      "name": "$HOSTNAME",
+      "ip": "$WEBUI_IP",
+      "control-ip": "$CTL_IP",
+      "data-ip": "$DATA_IP",
+      "username": "$OC_USERNAME",
+      "password": "$OC_PASSWORD",
+      "roles": [
+        {
+          "type": "webui",
+          "params": {
+            "cfgm": "$CONFIG_NAME"
+          } 
         }
       ]
     }
@@ -152,7 +190,6 @@ I=1
 for HOSTNAME in $CONTROLLER_NAMES
 do
   CTL_IP=$( echo -n $CONTROLLER_IPS | cut -d ' ' -f $I )
-
   CONFIG_NAME=$( echo -n $CONFIG_NAMES | cut -d ' ' -f $I )
   DATA_IP=$( echo -n $COLLECTOR_IPS | cut -d ' ' -f $I )
   DATA_NAME=$( echo -n $COLLECTOR_NAMES | cut -d ' ' -f $I )
@@ -188,10 +225,10 @@ do
   NEXT=","
 done
 
+I=1
 for HOSTNAME in $COMPUTE_NAMES
 do
   COMPUTE_IP=$( echo -n $COMPUTE_IPS | cut -d ' ' -f $I )
-
   CONFIG_NAME=$( echo -n $CONFIG_NAMES | cut -d ' ' -f $I )
   CTL_IP=$( echo -n $CONTROLLER_IPS | cut -d ' ' -f $I )
   DATA_IP=$( echo -n $COLLECTOR_IPS | cut -d ' ' -f $I )

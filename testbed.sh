@@ -14,8 +14,11 @@ fi
 
 while read HOSTNAME
 do
-  CONTROLLER_NAMES="$CONTROLLER_NAMES $HOSTNAME"
+  HOSTNAME=$( echo -n $HOSTNAME | sed -e 's/\.adm\./\.usr\./' )
   CONTROLLER_IPS="$CONTROLLER_IPS $( get_ip $HOSTNAME )"
+
+  HOSTNAME=$( echo -n $HOSTNAME | cut -d '.' -f 1 )
+  CONTROLLER_NAMES="$CONTROLLER_NAMES $HOSTNAME"
 done <<EOF
   $( get_nodes opencontrail::control )
 EOF
@@ -23,8 +26,11 @@ echo "CONTROLLER_NAMES = $CONTROLLER_NAMES"
 
 while read HOSTNAME
 do
-  COLLECTOR_NAMES="$COLLECTOR_NAMES $HOSTNAME"
+  HOSTNAME=$( echo -n $HOSTNAME | sed -e 's/\.adm\./\.usr\./' )
   COLLECTOR_IPS="$COLLECTOR_IPS $( get_ip $HOSTNAME )"
+
+  HOSTNAME=$( echo -n $HOSTNAME | cut -d '.' -f 1 )
+  COLLECTOR_NAMES="$COLLECTOR_NAMES $HOSTNAME"
 done <<EOF
   $( get_nodes opencontrail::analytics )
 EOF
@@ -32,8 +38,11 @@ echo "COLLECTOR_NAMES = $COLLECTOR_NAMES"
 
 while read HOSTNAME
 do
-  CONFIG_NAMES="$CONFIG_NAMES $HOSTNAME"
+  HOSTNAME=$( echo -n $HOSTNAME | sed -e 's/\.adm\./\.usr\./' )
   CONFIG_IPS="$CONFIG_IPS $( get_ip $HOSTNAME )"
+
+  HOSTNAME=$( echo -n $HOSTNAME | cut -d '.' -f 1 )
+  CONFIG_NAMES="$CONFIG_NAMES $HOSTNAME"
 done <<EOF
   $( get_nodes opencontrail::config )
 EOF
@@ -41,8 +50,11 @@ echo "CONFIG_NAMES = $CONFIG_NAMES"
 
 while read HOSTNAME
 do
-  WEBUI_NAMES="$WEBUI_NAMES $HOSTNAME"
+  HOSTNAME=$( echo -n $HOSTNAME | sed -e 's/\.adm\./\.usr\./' )
   WEBUI_IPS="$WEBUI_IPS $( get_ip $HOSTNAME )"
+
+  HOSTNAME=$( echo -n $HOSTNAME | cut -d '.' -f 1 )
+  WEBUI_NAMES="$WEBUI_NAMES $HOSTNAME"
 done <<EOF
   $( get_nodes opencontrail::webui )
 EOF
@@ -50,8 +62,11 @@ echo "WEBUI_NAMES = $WEBUI_NAMES"
 
 while read HOSTNAME
 do
-  COMPUTE_NAMES="$COMPUTE_NAMES $HOSTNAME"
+  HOSTNAME=$( echo -n $HOSTNAME | sed -e 's/\.adm\./\.usr\./' )
   COMPUTE_IPS="$COMPUTE_IPS $( get_ip $HOSTNAME )"
+
+  HOSTNAME=$( echo -n $HOSTNAME | cut -d '.' -f 1 )
+  COMPUTE_NAMES="$COMPUTE_NAMES $HOSTNAME"
 done <<EOF
   $( get_nodes opencontrail::compute )
 EOF

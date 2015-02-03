@@ -5,20 +5,23 @@ then
 	. localrc
 fi
 
-sudo rm -rf /tmp/oc-ci
-mkdir /tmp/oc-ci
+WORK_DIR=${WORK_DIR:-/tmp/}
+WORK_DIR=$WORK_DIR/oc-ci
+
+sudo rm -rf $WORK_DIR
+mkdir $WORK_DIR
 
 export http_proxy=http://pxy.int0.aub.cloudwatt.net:8123
 export https_proxy=http://pxy.int0.aub.cloudwatt.net:8123
 
 # install the last version of fabric
-git clone https://github.com/fabric/fabric.git /tmp/oc-ci/fabric
-pushd /tmp/oc-ci/fabric
+git clone https://github.com/fabric/fabric.git $WORK_DIR/fabric
+pushd $WORK_DIR/fabric
 sudo python setup.py install
 popd
 
 # clone the OC CI test
-git clone https://github.com/Juniper/contrail-test.git /tmp/oc-ci/contrail-test
+git clone https://github.com/Juniper/contrail-test.git $WORK_DIR/contrail-test
 
 # collect informations about the infra
 . /etc/openstack_credentials
@@ -44,7 +47,7 @@ export __webui__=False
 
 
 # generate config files
-pushd /tmp/oc-ci/contrail-test
+pushd $WORK_DIR/contrail-test
 
 envsubst < sanity_params.ini.sample > sanity_params.ini
 

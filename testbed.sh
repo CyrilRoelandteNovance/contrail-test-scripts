@@ -94,8 +94,8 @@ do
     {
       "name": "$HOSTNAME",
       "ip": "$COLLECTOR_IP",
-      "control-ip": "$CTL_IP",
-      "data-ip": "$DATA_IP",
+      "control-ip": "$COLLECTOR_IP",
+      "data-ip": "$COLLECTOR_IP",
       "username": "$OC_USERNAME",
       "password": "$OC_PASSWORD",
       "roles": [
@@ -124,8 +124,8 @@ do
     {
       "name": "$HOSTNAME",
       "ip": "$WEBUI_IP",
-      "control-ip": "$CTL_IP",
-      "data-ip": "$DATA_IP",
+      "control-ip": "$WEBUI_IP",
+      "data-ip": "$WEBUI_IP",
       "username": "$OC_USERNAME",
       "password": "$OC_PASSWORD",
       "roles": [
@@ -157,8 +157,8 @@ do
     {
       "name": "$HOSTNAME",
       "ip": "$CONFIG_IP",
-      "control-ip": "$CTL_IP",
-      "data-ip": "$DATA_IP",
+      "control-ip": "$CONFIG_IP",
+      "data-ip": "$CONFIG_IP",
       "username": "$OC_USERNAME",
       "password": "$OC_PASSWORD",
       "roles": [
@@ -188,8 +188,8 @@ cat <<EOF >>sanity_testbed.json
     {
       "name": "$KEYSTONE_HOSTNAME",
       "ip": "$KEYSTONE_IP",
-      "control-ip": "$CTL_IP",
-      "data-ip": "$DATA_IP",
+      "control-ip": "$KEYSTONE_IP",
+      "data-ip": "$KEYSTONE_IP",
       "username": "$OC_USERNAME",
       "password": "$OC_PASSWORD",
       "roles": [
@@ -214,7 +214,7 @@ do
       "name": "$HOSTNAME",
       "ip": "$CTL_IP",
       "control-ip": "$CTL_IP",
-      "data-ip": "$DATA_IP",
+      "data-ip": "$CTL_IP",
       "username": "$OC_USERNAME",
       "password": "$OC_PASSWORD",
       "roles": [
@@ -253,8 +253,8 @@ do
     {
       "name": "$HOSTNAME",
       "ip": "$COMPUTE_IP",
-      "control-ip": "$CTL_IP",
-      "data-ip": "$DATA_IP",
+      "control-ip": "$COMPUTE_IP",
+      "data-ip": "$COMPUTE_IP",
       "username": "$OC_USERNAME",
       "password": "$OC_PASSWORD",
       "roles": [

@@ -1,17 +1,11 @@
 #!/bin/bash
 
-if [ -e 'localrc' ]
-then
-  . localrc
-fi
-
-. utils
+# OUTPUT FILE
+TESTBED=$WORK_DIR/contrail-test/sanity_testbed.json
 
 #
-# COLLECT INFORMATIONS ABOUT THE INFRA
+# Collect info about the contrail deployment
 #
-. /etc/openstack_credentials
-
 while read HOSTNAME
 do
   HOSTNAME=$( echo -n $HOSTNAME | sed -e 's/\.adm\./\.usr\./' )
@@ -75,9 +69,9 @@ echo "COMPUTE_NAMES = $COMPUTE_NAMES"
 #
 # CONFIG FILE GENERATION
 # 
-rm sanity_testbed.json
+rm -f $TESTBED
 
-cat <<EOF >>sanity_testbed.json
+cat <<EOF >>$TESTBED
 {
   "hosts": [
 EOF
@@ -87,9 +81,7 @@ I=1
 for HOSTNAME in $COLLECTOR_NAMES
 do
   COLLECTOR_IP=$( echo -n $COLLECTOR_IPS | cut -d ' ' -f $I )
-  CTL_IP=$( echo -n $CONTROLLER_IPS | cut -d ' ' -f $I )
-  DATA_IP=$( echo -n $COLLECTOR_IPS | cut -d ' ' -f $I )
-  cat <<EOF >>sanity_testbed.json
+  cat <<EOF >>$TESTBED
     $SEP
     {
       "name": "$HOSTNAME",
@@ -116,10 +108,8 @@ I=1
 for HOSTNAME in $WEBUI_NAMES
 do
   WEBUI_IP=$( echo -n $WEBUI_IPS | cut -d ' ' -f $I )
-  CTL_IP=$( echo -n $CONTROLLER_IPS | cut -d ' ' -f $I )
-  DATA_IP=$( echo -n $COLLECTOR_IPS | cut -d ' ' -f $I )
   CONFIG_NAME=$( echo -n $CONFIG_NAMES | cut -d ' ' -f $I )
-  cat <<EOF >>sanity_testbed.json
+  cat <<EOF >>$TESTBED
     $SEP
     {
       "name": "$HOSTNAME",
@@ -148,11 +138,9 @@ EOF
 I=1
 for HOSTNAME in $CONFIG_NAMES
 do
-  COLLECTOR_NAME=$( echo -n $COLLECTOR_NAMES | cut -d ' ' -f $I )
   CONFIG_IP=$( echo -n $CONFIG_IPS | cut -d ' ' -f $I )
-  CTL_IP=$( echo -n $CONTROLLER_IPS | cut -d ' ' -f $I )
-  DATA_IP=$( echo -n $COLLECTOR_IPS | cut -d ' ' -f $I )
-  cat <<EOF >>sanity_testbed.json
+  COLLECTOR_NAME=$( echo -n $COLLECTOR_NAMES | cut -d ' ' -f $I )
+  cat <<EOF >>$TESTBED
     $SEP
     {
       "name": "$HOSTNAME",
@@ -181,9 +169,7 @@ EOF
 I=1
 KEYSTONE_HOSTNAME=$( echo -n $OS_AUTH_URL | sed -e 's/.*\/\/\(.*\):.*/\1/' )
 KEYSTONE_IP=$( get_ip $KEYSTONE_HOSTNAME )
-CTL_IP=$( echo -n $CONTROLLER_IPS | cut -d ' ' -f $I )
-DATA_IP=$( echo -n $COLLECTOR_IPS | cut -d ' ' -f $I )
-cat <<EOF >>sanity_testbed.json
+cat <<EOF >>$TESTBED
     $SEP
     {
       "name": "$KEYSTONE_HOSTNAME",
@@ -206,9 +192,8 @@ for HOSTNAME in $CONTROLLER_NAMES
 do
   CTL_IP=$( echo -n $CONTROLLER_IPS | cut -d ' ' -f $I )
   CONFIG_NAME=$( echo -n $CONFIG_NAMES | cut -d ' ' -f $I )
-  DATA_IP=$( echo -n $COLLECTOR_IPS | cut -d ' ' -f $I )
   DATA_NAME=$( echo -n $COLLECTOR_NAMES | cut -d ' ' -f $I )
-  cat <<EOF >>sanity_testbed.json
+  cat <<EOF >>$TESTBED
     $SEP
     {
       "name": "$HOSTNAME",
@@ -245,10 +230,8 @@ for HOSTNAME in $COMPUTE_NAMES
 do
   COMPUTE_IP=$( echo -n $COMPUTE_IPS | cut -d ' ' -f $I )
   CONFIG_NAME=$( echo -n $CONFIG_NAMES | cut -d ' ' -f $I )
-  CTL_IP=$( echo -n $CONTROLLER_IPS | cut -d ' ' -f $I )
-  DATA_IP=$( echo -n $COLLECTOR_IPS | cut -d ' ' -f $I )
   DATA_NAME=$( echo -n $COLLECTOR_NAMES | cut -d ' ' -f $I )
-  cat <<EOF >>sanity_testbed.json
+  cat <<EOF >>$TESTBED
     $SEP
     {
       "name": "$HOSTNAME",
@@ -275,7 +258,7 @@ EOF
   SEP=","
 done
 
-cat <<EOF >>sanity_testbed.json
+cat <<EOF >>$TESTBED
   ],
   "vgw": []
 }

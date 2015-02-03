@@ -1,0 +1,31 @@
+#!/bin/bash
+
+. utils
+
+# Output file
+PARAMS=$WORK_DIR/contrail-test/sanity_params.ini
+
+# get keystone ip
+KEYSTONE_HOSTNAME=$( echo -n $OS_AUTH_URL | sed -e 's/.*\/\/\(.*\):.*/\1/' )
+KEYSTONE_IP=$( get_ip $KEYSTONE_HOSTNAME )
+
+# currently we do not support the test of the web ui
+export __testbed_json_file__=sanity_testbed.json
+
+export __stack_user__=$OS_USERNAME
+export __stack_password__=$OS_PASSWORD
+export __stack_tenant__=$OS_TENANT_NAME
+export __stack_domain__=$OS_TENANT_NAME
+
+export __endpoint_type__=internalURL
+export __keystone_ip__=$KEYSTONE_IP
+
+export __multi_tenancy__=True
+export __address_family__=v4
+export __log_scenario__="just a simple run"
+
+export __devstack__=False
+export __webui__=False
+
+# generate config files
+envsubst < sanity_params.ini.sample > $PARAMS

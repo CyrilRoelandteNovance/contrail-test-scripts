@@ -1,0 +1,6 @@
+fabric
+python-novaclient
+python-neutronclient
+unittest2
+python-subunit
+fixtures
